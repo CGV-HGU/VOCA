@@ -8,9 +8,9 @@ elif LLM_BACKEND == "ollama":
 else:
     raise ValueError("Unsupported VOCA_LLM_BACKEND: {}".format(LLM_BACKEND))
 
-from llm_utils.nav_prompt import VLM_PROMPT, PRIORS_PROMPT, PRIOR_CLASS_LIST
+from llm_utils.navigation_prompts import VLM_PROMPT, PRIORS_PROMPT, PRIOR_CLASS_LIST
 from llm_utils.priors_parser import parse_llm_json, extract_priors, parse_decision_json, dedupe_preserve_order, parse_prior_class_block
-from cv_utils.yoloe_tools import *
+from cv_utils.yoloe_detector import *
 from typing import List, Dict, Any, Tuple, Optional, Union
 import cv2
 import time  # <-- 추가

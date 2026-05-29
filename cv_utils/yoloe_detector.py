@@ -1,4 +1,4 @@
-# cv_utils/yoloe_tools.py
+# cv_utils/yoloe_detector.py
 
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
@@ -182,7 +182,7 @@ def yoloe_detection(
         class_names=target_classes,
     )
 
-# 파일: cv_utils/yoloe_tools.py
+# file: cv_utils/yoloe_detector.py
 
 from typing import Dict
 

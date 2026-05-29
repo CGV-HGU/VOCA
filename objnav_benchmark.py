@@ -25,7 +25,7 @@ from habitat_config import hm3d_config
 from vlm_planner import VLMPlanner
 from policy_agent import PolicyAgent
 from habitat.utils.visualizations.maps import colorize_draw_agent_and_fit_to_height
-from cv_utils.yoloe_tools import initialize_yoloe_model
+from cv_utils.yoloe_detector import initialize_yoloe_model
 from omegaconf import OmegaConf, open_dict
 
 

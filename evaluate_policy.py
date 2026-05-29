@@ -11,7 +11,7 @@ from tqdm import tqdm
 from PIL import Image
 from habitat.tasks.nav.shortest_path_follower import ShortestPathFollower
 from policy_agent import PolicyAgent
-from data_utils.geometry_tools import *
+from data_utils.geometry import *
 from habitat_config import *
 from settings import POLICY_CHECKPOINT
 
