@@ -2,9 +2,9 @@ import numpy as np
 from settings import LLM_BACKEND
 
 if LLM_BACKEND == "gemini":
-    from llm_utils.gpt_request import gptv_response, gpt_response
+    from llm_utils.gemini_request import text_response, vision_response
 elif LLM_BACKEND == "ollama":
-    from llm_utils.gpt_request_ollama import gptv_response, gpt_response
+    from llm_utils.ollama_request import text_response, vision_response
 else:
     raise ValueError("Unsupported VOCA_LLM_BACKEND: {}".format(LLM_BACKEND))
 
@@ -251,7 +251,7 @@ class VLMPlanner:
             t0 = time.perf_counter()
             try:
                 # 이미지 없이 텍스트 전용 호출
-                raw_answer = gpt_response(text_content + PRIOR_CLASS_LIST, system_prompt=PRIORS_PROMPT)
+                raw_answer = text_response(text_content + PRIOR_CLASS_LIST, system_prompt=PRIORS_PROMPT)
                 if raw_answer:
                     self.llm_success_count += 1
             except Exception as e:
@@ -354,7 +354,7 @@ class VLMPlanner:
             print("[LLM/VLM] try {}/10".format(try_idx + 1))
             t0 = time.perf_counter()
             try:
-                raw_answer = gptv_response(text_content, inference_image, VLM_PROMPT)
+                raw_answer = vision_response(text_content, inference_image, VLM_PROMPT)
                 if raw_answer:
                     self.llm_success_count += 1
             except Exception as e:

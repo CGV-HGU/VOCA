@@ -106,6 +106,8 @@ Notes:
 - [x] Add VOCA-specific ignore rules for generated outputs, datasets, and checkpoints.
 - [x] Split hard-coded paths, devices, checkpoints, and LLM backend defaults into `settings.py`.
 - [x] Rename implementation-mismatched GPT-4V planner naming to VLM planner naming.
+- [x] Rename LLM backend modules/functions to `gemini_request.py`, `ollama_request.py`, `text_response`, and `vision_response`.
+- [x] Rename Habitat config utilities to `habitat_config.py`.
 - [ ] Add a minimal `requirements.txt` or environment note.
 - [ ] Refactor `objnav_benchmark.py` into a cleaner evaluation entrypoint.
 - [x] Update README with setup and run commands.

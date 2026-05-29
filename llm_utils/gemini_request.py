@@ -196,7 +196,7 @@ def _make_generation_config(GenerationConfig, response_schema=None):
         ) from e
 
 
-def gpt_response(text_prompt, system_prompt=""):
+def text_response(text_prompt, system_prompt=""):
     """
     Vertex AI Gemini text response.
     """
@@ -214,7 +214,7 @@ def gpt_response(text_prompt, system_prompt=""):
     return _extract_text(resp)
 
 
-def gptv_response(text_prompt, image_prompt, system_prompt=""):
+def vision_response(text_prompt, image_prompt, system_prompt=""):
     """
     Vertex AI Gemini multimodal response.
     image_prompt: image path(str) or OpenCV np.ndarray(BGR)

@@ -21,7 +21,7 @@ os.environ.setdefault("MAGNUM_LOG", "quiet")
 os.environ.setdefault("HABITAT_SIM_LOG", "quiet")
 
 import habitat
-from config_utils import hm3d_config
+from habitat_config import hm3d_config
 from vlm_planner import VLMPlanner
 from policy_agent import PolicyAgent
 from habitat.utils.visualizations.maps import colorize_draw_agent_and_fit_to_height

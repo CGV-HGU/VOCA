@@ -12,7 +12,7 @@ from PIL import Image
 from habitat.tasks.nav.shortest_path_follower import ShortestPathFollower
 from policy_agent import PolicyAgent
 from data_utils.geometry_tools import *
-from config_utils import *
+from habitat_config import *
 from settings import POLICY_CHECKPOINT
 
 os.environ["MAGNUM_LOG"] = "quiet"
