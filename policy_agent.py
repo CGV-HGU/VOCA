@@ -3,14 +3,15 @@ import cv2
 import numpy as np
 import quaternion
 import time
-from policy_network import PixelNav_Policy
+from settings import DEFAULT_DEVICE, POLICY_CHECKPOINT
+from policy_network import PixelNavPolicy
 
-class Policy_Agent:
-    def __init__(self,model_path="./checkpoints/navigator.ckpt",max_token_length=64,image_size=224,device="cuda:0"):
+class PolicyAgent:
+    def __init__(self,model_path=POLICY_CHECKPOINT,max_token_length=64,image_size=224,device=DEFAULT_DEVICE):
         self.image_size = image_size
         self.max_token_length = max_token_length
         self.device = device
-        self.network = PixelNav_Policy(max_token_length,device)
+        self.network = PixelNavPolicy(max_token_length,device)
         self.network.load_state_dict(torch.load(model_path,map_location=device))
         self.network.eval()
     def reset(self,goal_image,goal_mask):
@@ -44,4 +45,5 @@ class Policy_Agent:
         if early_stop and self.predict_length > 32:
             return_action = 0
         return return_action,cv2.cvtColor(return_goal,cv2.COLOR_BGR2RGB)
+
         

@@ -4,6 +4,7 @@ import torch.nn.functional as F
 import torchvision
 import torchvision.transforms as T
 from torchvision.models import resnet18 as imagenet_resnet18
+from settings import DEFAULT_DEVICE
 
 # generate the trajectory mask for self-attention
 def generate_square_subsequent_mask(sz: int):
@@ -11,8 +12,8 @@ def generate_square_subsequent_mask(sz: int):
     mask = mask.float().masked_fill(mask == 0, float('-inf')).masked_fill(mask == 1, float(0.0))
     return mask
 
-class PixelNav_Policy(nn.Module):
-    def __init__(self,max_token_length=64,device='cuda:0'):
+class PixelNavPolicy(nn.Module):
+    def __init__(self,max_token_length=64,device=DEFAULT_DEVICE):
         super().__init__()
         self.device = device
         self.max_token_length = max_token_length

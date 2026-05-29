@@ -9,7 +9,7 @@ import cv2
 import numpy as np
 import torch
 from ultralytics import YOLOE
-from constants import YOLOE_CHECKPOINT_PATH
+from settings import DEFAULT_DEVICE, YOLOE_CHECKPOINT_PATH
 
 
 @dataclass
@@ -59,14 +59,14 @@ def _resolve_weights_path(weights: Optional[str]) -> str:
         f"Tried:\n"
         f"  weights arg: {weights}\n"
         f"  env YOLOE_WEIGHTS: {os.environ.get('YOLOE_WEIGHTS')}\n"
-        f"  constants.YOLOE_CHECKPOINT_PATH: {YOLOE_CHECKPOINT_PATH}\n"
+        f"  settings.YOLOE_CHECKPOINT_PATH: {YOLOE_CHECKPOINT_PATH}\n"
         + hint
     )
 
 
 def initialize_yoloe_model(
     weights: Optional[str] = None,
-    device: str = "cuda:0",
+    device: str = DEFAULT_DEVICE,
     classes: Optional[List[str]] = None,
     prompt_mode: str = "text",
     conf_threshold: float = 0.25,
@@ -259,4 +259,3 @@ __all__ = [
     "detections_to_boxes",       # ← 추가
     "draw_detections_bgr",       # ← 추가
 ]
-

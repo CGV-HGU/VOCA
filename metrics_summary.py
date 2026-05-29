@@ -3,6 +3,7 @@
 
 import argparse
 import sys
+from settings import OBJNAV_METRICS_PATH
 
 try:
     import pandas as pd
@@ -173,7 +174,7 @@ def compute_metrics(df):
 
 def main():
     ap = argparse.ArgumentParser(description="Compute ObjNav metrics (micro & macro) from CSV.")
-    ap.add_argument("--csv", default="objnav_hm3d.csv", help="CSV file path (default: objnav_hm3d.csv)")
+    ap.add_argument("--csv", default=OBJNAV_METRICS_PATH, help=f"CSV file path (default: {OBJNAV_METRICS_PATH})")
     args = ap.parse_args()
 
     df = pd.read_csv(args.csv)

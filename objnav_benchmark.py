@@ -1,9 +1,4 @@
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-os.environ["MAGNUM_LOG"] = "quiet"
-os.environ["HABITAT_SIM_LOG"] = "quiet"
-
-import habitat
 import argparse
 import csv
 import cv2
@@ -11,16 +6,33 @@ import imageio
 import numpy as np
 import time
 from tqdm import tqdm
-from constants import *
+from settings import (
+    DEFAULT_CUDA_VISIBLE_DEVICES,
+    DEFAULT_DEVICE,
+    DETECT_OBJECTS,
+    OBJNAV_METRICS_PATH,
+    POLICY_CHECKPOINT,
+    TRAJECTORY_DIR,
+    YOLOE_CHECKPOINT_PATH,
+)
+
+os.environ.setdefault("CUDA_VISIBLE_DEVICES", DEFAULT_CUDA_VISIBLE_DEVICES)
+os.environ.setdefault("MAGNUM_LOG", "quiet")
+os.environ.setdefault("HABITAT_SIM_LOG", "quiet")
+
+import habitat
 from config_utils import hm3d_config
-from gpt4v_planner import GPT4V_Planner
-from policy_agent import Policy_Agent
+from vlm_planner import VLMPlanner
+from policy_agent import PolicyAgent
 from habitat.utils.visualizations.maps import colorize_draw_agent_and_fit_to_height
 from cv_utils.yoloe_tools import initialize_yoloe_model
 from omegaconf import OmegaConf, open_dict
 
 
-def write_metrics(metrics, path="objnav_hm3d.csv"):
+def write_metrics(metrics, path):
+    if not metrics:
+        return
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     with open(path, mode="w", newline="") as csv_file:
         fieldnames = metrics[0].keys()
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
@@ -33,11 +45,18 @@ def adjust_topdown(metrics):
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--eval_episodes", type=int, default=400)
+    parser.add_argument("--stage", type=str, default="val")
+    parser.add_argument("--device", type=str, default=DEFAULT_DEVICE)
+    parser.add_argument("--policy_checkpoint", type=str, default=POLICY_CHECKPOINT)
+    parser.add_argument("--yoloe_checkpoint", type=str, default=YOLOE_CHECKPOINT_PATH)
+    parser.add_argument("--output_dir", type=str, default=TRAJECTORY_DIR)
+    parser.add_argument("--metrics_path", type=str, default=OBJNAV_METRICS_PATH)
     return parser.parse_known_args()[0]
 
 
 args = get_args()
-habitat_config = hm3d_config(stage='val', episodes=args.eval_episodes)
+
+habitat_config = hm3d_config(stage=args.stage, episodes=args.eval_episodes)
 print("scene_dataset =", habitat_config.habitat.simulator.scene_dataset)
 print("scenes_dir    =", habitat_config.habitat.dataset.scenes_dir)
 print("data_path     =", habitat_config.habitat.dataset.data_path)
@@ -51,20 +70,16 @@ with open_dict(habitat_config.habitat.task.measurements):
 
 habitat_env = habitat.Env(habitat_config)
 
-DETECT_OBJECTS = ['bed', 'sofa', 'chair', 'plant', 'tv', 'toilet', 'floor']
 yoloe_model = initialize_yoloe_model(
-    weights=YOLOE_CHECKPOINT_PATH,
-    device="cuda:0",
+    weights=args.yoloe_checkpoint,
+    device=args.device,
     classes=DETECT_OBJECTS,
     prompt_mode="text",
 )
 
-try:
-    nav_planner = GPT4V_Planner(yoloe_model)
-except TypeError:
-    nav_planner = GPT4V_Planner(yoloe_model, yoloe_model)
+nav_planner = VLMPlanner(yoloe_model)
 
-nav_executor = Policy_Agent(model_path=POLICY_CHECKPOINT)
+nav_executor = PolicyAgent(model_path=args.policy_checkpoint, device=args.device)
 evaluation_metrics = []
 
 for i in tqdm(range(args.eval_episodes)):
@@ -84,10 +99,10 @@ for i in tqdm(range(args.eval_episodes)):
         return obs_
     habitat_env.step = _instrumented_step
 
-    dir = "./tmp/trajectory_%d" % i
-    os.makedirs(dir, exist_ok=False)
-    fps_writer = imageio.get_writer("%s/fps.mp4" % dir, fps=4)
-    topdown_writer = imageio.get_writer("%s/metric.mp4" % dir, fps=4)
+    trajectory_dir = os.path.join(args.output_dir, "trajectory_%d" % i)
+    os.makedirs(trajectory_dir, exist_ok=True)
+    fps_writer = imageio.get_writer("%s/fps.mp4" % trajectory_dir, fps=4)
+    topdown_writer = imageio.get_writer("%s/metric.mp4" % trajectory_dir, fps=4)
     heading_offset = 0
     step_counter = 0
     start_geodesic_m = float(habitat_env.get_metrics()['distance_to_goal'])  
@@ -360,4 +375,4 @@ for i in tqdm(range(args.eval_episodes)):
         'total_distance_m': float(_stats['dist_m']),
     })
 
-    write_metrics(evaluation_metrics)
+    write_metrics(evaluation_metrics, args.metrics_path)

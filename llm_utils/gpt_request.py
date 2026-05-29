@@ -19,9 +19,8 @@ if not os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"):
             os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = _adc_path
             break
 
-# Test-time fixed model: always use Gemini 2.5 Flash.
-TEXT_MODEL = "gemini-2.5-flash"
-VISION_MODEL = "gemini-2.5-flash"
+TEXT_MODEL = os.getenv("VOCA_TEXT_MODEL", os.getenv("GEMINI_TEXT_MODEL", "gemini-2.5-flash"))
+VISION_MODEL = os.getenv("VOCA_VISION_MODEL", os.getenv("GEMINI_VISION_MODEL", "gemini-2.5-flash"))
 VERTEX_LOCATION = os.getenv("VERTEXAI_LOCATION", os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1"))
 
 try:

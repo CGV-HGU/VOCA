@@ -218,6 +218,18 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+### VOCA ###
+data/
+datasets/
+scene_datasets/
+checkpoints/
+outputs/
+tmp/
+*_trajectory/
+*.mp4
+*.csv
+*.jsonl
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json

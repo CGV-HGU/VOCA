@@ -8,14 +8,14 @@ from mimetypes import guess_type
 # ===== Ollama 설정 =====
 # 포트 9999로 서비스한다면: export OLLAMA_BASE_URL="http://localhost:9999"
 # (미설정 시 기본값은 http://localhost:9999)
-OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:12345")
+OLLAMA_BASE_URL = os.getenv("VOCA_OLLAMA_BASE_URL", os.getenv("OLLAMA_BASE_URL", "http://localhost:12345"))
 
 # 요청 모델: 사용자 지정
-DEFAULT_MODEL = "llama4:17b-scout-16e-instruct-q8_0"
+DEFAULT_MODEL = os.getenv("VOCA_OLLAMA_MODEL", "llama4:17b-scout-16e-instruct-q8_0")
 
 # 환경변수로 바꾸고 싶다면 OLLAMA_TEXT_MODEL / OLLAMA_VISION_MODEL 지정
-TEXT_MODEL   = os.getenv("OLLAMA_TEXT_MODEL", DEFAULT_MODEL)
-VISION_MODEL = os.getenv("OLLAMA_VISION_MODEL", DEFAULT_MODEL)
+TEXT_MODEL   = os.getenv("VOCA_OLLAMA_TEXT_MODEL", os.getenv("OLLAMA_TEXT_MODEL", DEFAULT_MODEL))
+VISION_MODEL = os.getenv("VOCA_OLLAMA_VISION_MODEL", os.getenv("OLLAMA_VISION_MODEL", DEFAULT_MODEL))
 
 # ===== 공통: Ollama Chat 호출 =====
 def _ollama_chat(messages, model, num_predict=1000):

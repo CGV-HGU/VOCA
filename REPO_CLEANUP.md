@@ -17,10 +17,10 @@ Paper title:
 
 - Use `VOCA` as the project name everywhere.
 - Replace old names such as `ISA` in documentation, comments, logs, and scripts.
-- Decide whether `objnav_benchmark.py` should remain as the main evaluation entrypoint or be renamed.
+- Use `objnav_benchmark.py` as the main ObjectNav evaluation entrypoint.
 - Align class names with the paper terminology:
-  - `GPT4V_Planner`
-  - `Policy_Agent`
+  - `VLMPlanner`
+  - `PolicyAgent`
   - VOCA planner / VOCA agent naming, if appropriate.
 - Standardize output names such as metrics CSVs, video folders, and temporary trajectory paths.
 
@@ -68,7 +68,7 @@ Notes:
 - Remove hard-coded GPU setting from module import time:
   - `CUDA_VISIBLE_DEVICES`
   - model device strings such as `cuda:0`
-- Replace `from constants import *` with explicit imports.
+- Replace `from constants import *` with explicit imports from `settings.py`.
 - Ensure temporary output directories are configurable.
 - Avoid failing when `./tmp/trajectory_X` already exists.
 - Add `if __name__ == "__main__":` guards for runnable scripts.
@@ -101,9 +101,11 @@ Notes:
 
 ## Immediate Next Steps
 
-- [ ] Rename documentation from old project names to VOCA.
+- [x] Rename documentation from old project names to VOCA.
 - [x] Add `.gitignore`.
-- [ ] Add VOCA-specific ignore rules for generated outputs, datasets, and checkpoints.
+- [x] Add VOCA-specific ignore rules for generated outputs, datasets, and checkpoints.
+- [x] Split hard-coded paths, devices, checkpoints, and LLM backend defaults into `settings.py`.
+- [x] Rename implementation-mismatched GPT-4V planner naming to VLM planner naming.
 - [ ] Add a minimal `requirements.txt` or environment note.
 - [ ] Refactor `objnav_benchmark.py` into a cleaner evaluation entrypoint.
-- [ ] Update README with setup and run commands.
+- [x] Update README with setup and run commands.
